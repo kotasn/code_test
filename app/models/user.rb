@@ -9,6 +9,8 @@ class User < ApplicationRecord
                                    dependent:   :destroy
   has_many :following, through: :active_relationships,  source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
+  has_many :relationship_notifications, dependent: :destroy
+  has_many :system_notifications, dependent: :destroy
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -19,6 +21,12 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  after_create_commit :create_notification
+
+  # ようこそ通知の作成
+  def create_notification
+    SystemNotification.create(user_id: self.id, type: 'welcome')
+  end
 
   # 渡された文字列のハッシュ値を返す
   def User.digest(string)

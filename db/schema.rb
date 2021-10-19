@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_18_073601) do
+ActiveRecord::Schema.define(version: 2021_10_19_070753) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -42,6 +42,16 @@ ActiveRecord::Schema.define(version: 2020_02_18_073601) do
     t.index ["user_id"], name: "index_microposts_on_user_id"
   end
 
+  create_table "relationship_notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "relationship_id"
+    t.datetime "read_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["relationship_id"], name: "index_relationship_notifications_on_relationship_id"
+    t.index ["user_id"], name: "index_relationship_notifications_on_user_id"
+  end
+
   create_table "relationships", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "followed_id"
@@ -50,6 +60,16 @@ ActiveRecord::Schema.define(version: 2020_02_18_073601) do
     t.index ["followed_id"], name: "index_relationships_on_followed_id"
     t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
     t.index ["follower_id"], name: "index_relationships_on_follower_id"
+  end
+
+  create_table "system_notifications", force: :cascade do |t|
+    t.integer "user_id"
+    t.datetime "read_at"
+    t.string "type"
+    t.text "message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_system_notifications_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
